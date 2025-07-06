@@ -5,7 +5,7 @@ def load_answers(path='custom_answers.yaml'):
     with open(path, 'r') as file:
         return yaml.safe_load(file)
 
-def find_answer(question, answers, threshold=80):
+def find_answer(question, answers, threshold=50, debug=False):
     question_clean = question.lower().strip()
 
     # Exact match first
@@ -13,13 +13,18 @@ def find_answer(question, answers, threshold=80):
         if question_clean == qa['question'].lower().strip():
             return qa['answer']
 
-    # Fuzzy match fallback
+    # Fuzzy match with token set ratio
     questions_list = [qa['question'] for qa in answers]
-    best_match = process.extractOne(question, questions_list, scorer=fuzz.ratio)
+    best_match, score, _ = process.extractOne(
+        question, questions_list, scorer=fuzz.token_set_ratio
+    )
 
-    if best_match and best_match[1] >= threshold:
+    if debug:
+        print(f"[DEBUG] Best fuzzy match: '{best_match}' with score {score}")
+
+    if score >= threshold:
         for qa in answers:
-            if qa['question'] == best_match[0]:
+            if qa['question'] == best_match:
                 return qa['answer']
 
     return None

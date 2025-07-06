@@ -20,7 +20,7 @@ if __name__ == '__main__':
             question = input("Ask a DVT IDE question (or 'exit'): ")
             if question.lower() in ('exit', 'quit'):
                 break
-            answer = find_answer(question, answers)
+            answer = find_answer(question, answers, debug=True)
             print(answer if answer else "Sorry, I don’t know yet.")
     else:
         app.run(debug=True)
