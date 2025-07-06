@@ -2,29 +2,31 @@ import yaml
 from rapidfuzz import fuzz, process
 
 def load_answers(path='custom_answers.yaml'):
-    with open(path, 'r') as file:
-        return yaml.safe_load(file)
+    with open(path, 'r') as f:
+        return yaml.safe_load(f)
 
-def find_answer(question, answers, threshold=50, debug=False):
-    question_clean = question.lower().strip()
-
-    # Exact match first
+def find_answer_with_score(question, answers, threshold=70, debug=False):
+    q = question.strip()
+    # Exact match
     for qa in answers:
-        if question_clean == qa['question'].lower().strip():
-            return qa['answer']
+        if q.lower() == qa['question'].lower().strip():
+            if debug:
+                print(f"[DEBUG] Exact match on '{qa['question']}' (score 100)")
+            return qa['answer'], qa['question'], 100
 
     # Fuzzy match with token set ratio
     questions_list = [qa['question'] for qa in answers]
     best_match, score, _ = process.extractOne(
-        question, questions_list, scorer=fuzz.token_set_ratio
+        q, questions_list,
+        scorer=fuzz.token_set_ratio
     )
 
     if debug:
-        print(f"[DEBUG] Best fuzzy match: '{best_match}' with score {score}")
+        print(f"[DEBUG] Fuzzy best match: '{best_match}' with score {score}")
 
     if score >= threshold:
         for qa in answers:
             if qa['question'] == best_match:
-                return qa['answer']
+                return qa['answer'], qa['question'], int(score)
 
-    return None
+    return None if not debug else (None, best_match, int(score))

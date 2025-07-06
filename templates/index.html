@@ -1,19 +1,30 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>DVT IDE Chatbot</title>
-    <style>
-        body { font-family: Arial, sans-serif; padding: 2em; }
-        input, button { padding: 0.5em; font-size: 1em; }
-    </style>
+  <title>DVT IDE Chatbot</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 2em; }
+    input, button { padding: 0.5em; font-size: 1em; }
+    .response { margin-top: 1em; }
+    .match-info { color: gray; font-size: 0.9em; }
+  </style>
 </head>
 <body>
-    <h1>DVT IDE Chatbot</h1>
-    <form method="post">
-        <label>Ask a question:</label><br>
-        <input type="text" name="question" size="60">
-        <button type="submit">Ask</button>
-    </form>
-    <p><strong>Answer:</strong> {{ response }}</p>
+  <h1>DVT IDE Chatbot</h1>
+  <form method="post">
+    <label>Ask a question:</label><br>
+    <input type="text" name="question" size="60">
+    <button type="submit">Ask</button>
+  </form>
+  {% if response %}
+    <div class="response">
+      <p><strong>Answer:</strong> {{ response }}</p>
+      {% if match_question %}
+        <p class="match-info">Matched: "{{ match_question }}" (score: {{ match_score }})</p>
+      {% elif suggestion %}
+        <p class="match-info">{{ suggestion }}</p>
+      {% endif %}
+    </div>
+  {% endif %}
 </body>
 </html>

@@ -1,26 +1,43 @@
 from flask import Flask, request, render_template
-from answer_engine import load_answers, find_answer
+from answer_engine import load_answers, find_answer_with_score
 
 app = Flask(__name__)
 answers = load_answers()
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    response = ""
+    response = None
+    match_question = None
+    match_score = None
+    suggestion = None
     if request.method == 'POST':
-        question = request.form['question']
-        answer = find_answer(question, answers)
-        response = answer if answer else "Sorry, I don’t know yet. You can add this to the knowledge base."
-    return render_template('index.html', response=response)
+        result = find_answer_with_score(request.form['question'], answers, threshold=70, debug=False)
+        if result and result[0]:
+            response, match_question, match_score = result
+        else:
+            response = "Sorry, I don’t know yet. You can add this to the knowledge base."
+            if result:
+                _, mq, ms = result
+                suggestion = f"Did you mean '{mq}'? (score: {ms})"
+    return render_template('index.html', response=response, match_question=match_question,
+                           match_score=match_score, suggestion=suggestion)
 
 if __name__ == '__main__':
     import sys
     if len(sys.argv) > 1 and sys.argv[1] == 'cli':
         while True:
-            question = input("Ask a DVT IDE question (or 'exit'): ")
-            if question.lower() in ('exit', 'quit'):
+            q = input("Ask a DVT IDE question (or 'exit'): ")
+            if q.lower() in ('exit', 'quit'):
                 break
-            answer = find_answer(question, answers, debug=True)
-            print(answer if answer else "Sorry, I don’t know yet.")
+            result = find_answer_with_score(q, answers, threshold=70, debug=True)
+            if result and result[0]:
+                ans, mq, ms = result
+                print(f"{ans}  (matched: '{mq}' with score {ms})")
+            else:
+                if result:
+                    _, mq, ms = result
+                    print(f"Sorry, I don’t know yet. (suggested: '{mq}' score {ms})")
+                else:
+                    print("Sorry, I don’t know yet.")
     else:
         app.run(debug=True)
