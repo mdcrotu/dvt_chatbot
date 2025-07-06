@@ -1,0 +1,7 @@
+- question: How do I open the DVT Console?
+  answer: Go to **Window > Show View > Other > DVT > DVT Console** in Eclipse.
+  tags: [console, view, eclipse]
+
+- question: How can I create a new build configuration?
+  answer: Right-click the project > Properties > DVT > Build Configuration > New.
+  tags: [build, configuration, setup]
