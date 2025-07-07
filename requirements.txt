@@ -3,3 +3,5 @@ PyYAML
 rapidfuzz
 sentence-transformers
 tqdm
+beautifulsoup4
+requests
