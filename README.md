@@ -10,6 +10,7 @@ bash setup.sh
     Create the virtual environment
     Install dependencies
     Prompt you to launch in web or CLI mode
+    If web, use your browser to connect to the displayed address:port
 
 ▶️ Option 2: Use the Makefile
 ```{bash}

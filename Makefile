@@ -1,4 +1,4 @@
-.PHONY: run cli venv install clean
+.PHONY: run cli venv install clean embed
 
 venv:
 	python3 -m venv venv
@@ -11,6 +11,9 @@ run: install
 
 cli: install
 	venv/bin/python app.py cli
+
+embed: install
+	venv/bin/python embed_dvt_guide.py
 
 clean:
 	rm -rf __pycache__ venv *.pyc
