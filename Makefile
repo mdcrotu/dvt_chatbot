@@ -12,11 +12,11 @@ run: install
 cli: install
 	venv/bin/python app.py cli
 
-embed: install
-	venv/bin/python embed_dvt_guide.py
-
 scrape: install
 	venv/bin/python scrape_dvt_guide.py --max 200
+
+embed: install
+	venv/bin/python embed_dvt_guide.py
 
 search: install
 	venv/bin/python search_cli.py
