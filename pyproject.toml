@@ -14,4 +14,8 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["pip-tools","pytest"]
+dev = [
+    "pip-tools",
+    "pytest",
+    "python-dotenv"
+]

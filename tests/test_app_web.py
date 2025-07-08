@@ -1,11 +1,22 @@
 import pytest
-from dvt_chatbot.app import app
+from unittest.mock import patch
+from dvt_chatbot.app import app as flask_app
+import tempfile
 
 @pytest.fixture
-def client():
-    app.config["TESTING"] = True
-    with app.test_client() as client:
-        yield client
+def client(tmp_path):
+    # Create a mock answers file
+    mock_yaml = tmp_path / "mock_answers.yaml"
+    mock_yaml.write_text("""
+    - question: How do I open the DVT Console?
+      answer: Go to Window > Show View > Other > DVT > DVT Console in Eclipse.
+    """)
+
+    # Patch config before initializing test client
+    with patch("dvt_chatbot.config.CUSTOM_ANSWERS_FILE", str(mock_yaml)):
+        flask_app.config["TESTING"] = True
+        with flask_app.test_client() as client:
+            yield client
 
 def test_web_exact_match(client):
     response = client.post("/", data={"question": "How do I open the DVT Console?"})

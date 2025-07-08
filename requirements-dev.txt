@@ -119,6 +119,8 @@ pyproject-hooks==1.2.0
     #   pip-tools
 pytest==8.4.1
     # via dvt_chatbot (pyproject.toml)
+python-dotenv==1.1.1
+    # via dvt_chatbot (pyproject.toml)
 pyyaml==6.0.2
     # via
     #   dvt_chatbot (pyproject.toml)

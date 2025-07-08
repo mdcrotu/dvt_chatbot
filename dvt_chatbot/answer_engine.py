@@ -1,7 +1,8 @@
 import yaml
 from rapidfuzz import fuzz, process
+from dvt_chatbot.config import CUSTOM_ANSWERS_FILE
 
-def load_answers(path='custom_answers.yaml'):
+def load_answers(path=(CUSTOM_ANSWERS_FILE)):
     with open(path, 'r') as f:
         return yaml.safe_load(f)
 

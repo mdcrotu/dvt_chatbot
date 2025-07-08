@@ -1,11 +1,14 @@
-.PHONY: clean deep-clean freeze run cli venv install embed search scrape
-
-freeze:
-	pip-compile pyproject.toml --output-file=requirements.txt
-	pip-compile --extra dev pyproject.toml --output-file=requirements-dev.txt
+.PHONY: clean deep-clean freeze venv env-run run cli install embed search scrape
 
 venv:
 	python3 -m venv venv
+
+env-run:
+	venv/bin/python -m dotenv run -- venv/bin/python -m dvt_chatbot.app run
+
+freeze: venv
+	venv/bin/pip-compile pyproject.toml --output-file=requirements.txt
+	venv/bin/pip-compile --extra dev pyproject.toml --output-file=requirements-dev.txt
 
 dev: venv
 	venv/bin/pip install -e .
@@ -26,13 +29,13 @@ scrape: install
 embed: install
 	venv/bin/python -m dvt_chatbot.embed_dvt_guide
 
-search: install
+search: dev
 	venv/bin/python -m dvt_chatbot.search_cli
 
-validate_embeddings: install
+validate_embeddings: dev
 	venv/bin/python test_validate_embeddings.py
 
-test: install
+test: dev
 	venv/bin/pytest tests/
 
 clean:

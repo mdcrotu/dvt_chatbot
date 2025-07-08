@@ -2,6 +2,7 @@ import json
 import numpy as np
 from sentence_transformers import SentenceTransformer
 from typing import List, Tuple
+from dvt_chatbot.config import DVT_GUIDE_FILE
 
 def cosine_similarity(vec1, vec2):
     vec1 = np.array(vec1)
@@ -10,7 +11,7 @@ def cosine_similarity(vec1, vec2):
         return 0.0
     return np.dot(vec1, vec2) / (np.linalg.norm(vec1) * np.linalg.norm(vec2))
 
-def search_guide(query: str, data_path: str = "dvt_guide_data_with_embeddings.json", top_k: int = 3) -> List[Tuple[float, str, str, str]]:
+def search_guide(query: str, data_path: str = DVT_GUIDE_FILE, top_k: int = 3) -> List[Tuple[float, str, str, str]]:
     # Load data
     with open(data_path, 'r', encoding='utf-8') as f:
         guide_data = json.load(f)
