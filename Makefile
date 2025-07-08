@@ -21,8 +21,11 @@ embed: install
 search: install
 	venv/bin/python search_cli.py
 
-test: install
+validate_embeddings: install
 	venv/bin/python test_validate_embeddings.py
+
+test: install
+	venv/bin/pytest tests/
 
 clean:
 	rm -rf __pycache__ venv *.pyc

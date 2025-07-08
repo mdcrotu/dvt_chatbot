@@ -77,12 +77,14 @@ make scrape     # Scrapes the DVT User Guide (scrape_dvt_guide.py)
 make embed      # Reads the dvt_guide.data.json and adds embeddings (embed_dvt_guide.py)
                 # Creates the dvt_guide_data_with_embeddings.json file
 make search     # Standalone script to test searching the DVT User Guide results (search_cli.py)
-make test       # Runs test_validate_embeddings.py
+make validate_embeddings
+                # Runs test_validate_embeddings.py
                 # Loads dvt_guide_data_with_embeddings.json
                 # Checks for valid embedding fields
                 # Prints:
                     # Total entries
                     # First 5 embeddings and their length
                     # Cosine similarity between the first two sections
+make test       # Runs the pytest test runner
 make clean      # Cleans virtual env and cache
 ```
