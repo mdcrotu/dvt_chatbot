@@ -1,5 +1,5 @@
 from flask import Flask, request, render_template
-from answer_engine import load_answers, find_answer_with_score
+from .answer_engine import load_answers, find_answer_with_score
 
 app = Flask(__name__)
 answers = load_answers()

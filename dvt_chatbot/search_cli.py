@@ -1,4 +1,4 @@
-from search_engine import search_guide
+from .search_engine import search_guide
 
 def main():
     print("🔍 DVT Guide Search CLI")

@@ -1,9 +1,5 @@
-import sys
-import os
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-
 import pytest
-from answer_engine import load_answers, find_answer_with_score
+from dvt_chatbot.answer_engine import load_answers, find_answer_with_score
 
 @pytest.fixture
 def answers():

@@ -1,0 +1,17 @@
+[project]
+name = "dvt_chatbot"
+version = "0.1.0"
+description = "A chatbot that answers DVT IDE questions using fuzzy and semantic search."
+authors = [{name = "Mike Cochran"}]
+dependencies = [
+    "Flask",
+    "PyYAML",
+    "rapidfuzz",
+    "sentence-transformers",
+    "tqdm",
+    "requests",
+    "beautifulsoup4"
+]
+
+[project.optional-dependencies]
+dev = ["pip-tools","pytest"]

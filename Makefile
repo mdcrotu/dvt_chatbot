@@ -1,25 +1,33 @@
-.PHONY: run cli venv install clean embed search scrape
+.PHONY: clean deep-clean freeze run cli venv install embed search scrape
+
+freeze:
+	pip-compile pyproject.toml --output-file=requirements.txt
+	pip-compile --extra dev pyproject.toml --output-file=requirements-dev.txt
 
 venv:
 	python3 -m venv venv
+
+dev: venv
+	venv/bin/pip install -e .
+	venv/bin/pip install -r requirements-dev.txt
 
 install: venv
 	venv/bin/pip install -r requirements.txt
 
 run: install
-	venv/bin/python app.py
+	venv/bin/python -m dvt_chatbot.app
 
 cli: install
-	venv/bin/python app.py cli
+	venv/bin/python -m dvt_chatbot.app cli
 
 scrape: install
-	venv/bin/python scrape_dvt_guide.py --max 200
+	venv/bin/python -m dvt_chatbot.scrape_dvt_guide --max 200
 
 embed: install
-	venv/bin/python embed_dvt_guide.py
+	venv/bin/python -m dvt_chatbot.embed_dvt_guide
 
 search: install
-	venv/bin/python search_cli.py
+	venv/bin/python -m dvt_chatbot.search_cli
 
 validate_embeddings: install
 	venv/bin/python test_validate_embeddings.py
@@ -28,4 +36,16 @@ test: install
 	venv/bin/pytest tests/
 
 clean:
-	rm -rf __pycache__ venv *.pyc
+	find . -type d -name "__pycache__" -exec rm -r {} +
+	find . -type f -name "*.pyc" -delete
+	find . -type f -name "*.pyo" -delete
+	find . -type f -name "*~" -delete
+	rm -rf .pytest_cache
+	rm -rf .mypy_cache
+	rm -rf dvt_chatbot.egg-info
+
+deep-clean: clean
+	rm -rf dvt_guide_data.json
+	rm -rf dvt_guide_data_with_embeddings.json
+	rm -rf requirements.txt requirements-dev.txt
+	rm -rf venv
