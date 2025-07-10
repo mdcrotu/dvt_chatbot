@@ -23,6 +23,7 @@ def test_web_exact_match(client):
     assert b"DVT Console" in response.data
 
 def test_web_fallback_message(client):
-    response = client.post("/", data={"question": "gibberishxyz"})
-    text = response.data.decode("utf-8")
-    assert "Sorry, I don’t know yet." in text
+    with patch("dvt_chatbot.app.get_answer_with_fallback", return_value=None):
+        response = client.post("/", data={"question": "gibberishxyz"})
+        text = response.data.decode("utf-8")
+        assert "Sorry, I don’t know yet." in text

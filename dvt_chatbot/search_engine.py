@@ -14,9 +14,33 @@ def cosine_similarity(vec1, vec2):
         return 0.0
     return np.dot(vec1, vec2) / (np.linalg.norm(vec1) * np.linalg.norm(vec2))
 
+def clean_content(text: str) -> str:
+    import re
+
+    # Collapse all whitespace
+    text = re.sub(r"\s+", " ", text)
+
+    # Remove common irrelevant phrases or blocks
+    patterns = [
+        r"Skip to content",
+        r"Back to top",
+        r"Toggle navigation menu.*?⌘ K.*?",  # keyboard shortcut banner
+        r"DVT SystemVerilog IDE for Eclipse User Guide",  # repeated title
+    ]
+    for pattern in patterns:
+        text = re.sub(pattern, "", text, flags=re.IGNORECASE)
+
+    return text.strip()
+
 def load_guide_chunks(data_path: str = DVT_GUIDE_FILE) -> List[Dict]:
     with open(data_path, 'r', encoding='utf-8') as f:
-        return json.load(f)
+        chunks = json.load(f)
+
+    for chunk in chunks:
+        if "content" in chunk:
+            chunk["content"] = clean_content(chunk["content"])
+
+    return chunks
 
 def find_best_semantic_match(query: str, chunks: List[Dict], threshold: float = 0.5, model=None) -> Dict | None:
     embed_model = model or embedder
@@ -30,7 +54,7 @@ def find_best_semantic_match(query: str, chunks: List[Dict], threshold: float = 
         if not embedding:
             continue
         score = cosine_similarity(query_embedding, embedding)
-        print(f"[TEST DEBUG] Similarity score: {score}")
+#        print(f"[TEST DEBUG] Similarity score: {score}")
         if score > best_score:
             best_score = score
             best_entry = entry

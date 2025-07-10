@@ -52,13 +52,19 @@ def get_answer_with_fallback(user_question, model=None):
     match = find_best_semantic_match(user_question, chunks, threshold=0.0, model=model)
 
     if match:
+        formatted = (
+            f"📘 <strong>{match['title']}</strong><br><br>"
+            f"{match['content']}<br><br>"
+            f"🔗 <a href=\"{match['url']}\" target=\"_blank\">View in DVT Guide</a>"
+        )
         return {
-            "answer": match["content"],
+            "answer": formatted,
             "source": "guide",
             "score": match["score"],
             "title": match["title"],
             "url": match["url"],
         }
+
 
     # Nothing matched
     return None

@@ -18,7 +18,7 @@
   </form>
   {% if response %}
     <div class="response">
-      <p><strong>Answer:</strong> {{ response }}</p>
+      <p><strong>Answer:</strong> <span>{{ response | safe }}</span></p>
       {% if match_question %}
         <p class="match-info">Matched: "{{ match_question }}" (score: {{ match_score }})</p>
       {% elif suggestion %}
