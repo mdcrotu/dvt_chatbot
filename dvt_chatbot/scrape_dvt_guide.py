@@ -5,10 +5,11 @@ import time
 from urllib.parse import urljoin, urlparse
 from uuid import uuid4
 import argparse
+import os
 
 BASE_URL = "https://eda.amiq.com/documentation/eclipse/sv/index.html"
 DOMAIN = "eda.amiq.com"
-OUTPUT_FILE = "dvt_guide_data.json"
+OUTPUT_FILE = "data/dvt_guide_data.json"
 
 visited = set()
 collected = []
@@ -48,13 +49,13 @@ def scrape_page(url):
             "title": title,
             "url": url,
             "content": content,
-            "section_path": [],  # optional for now
+            "section_path": [],  # reserved for future use
             "tokens": tokens,
             "source": "scraped"
         }
         return soup, entry
     except Exception as e:
-        print(f"Failed to scrape {url}: {e}")
+        print(f"❌ Failed to scrape {url}: {e}")
         return None, None
 
 def crawl(start_url, max_pages=200):
@@ -64,7 +65,7 @@ def crawl(start_url, max_pages=200):
         url = queue.pop(0)
         if url in visited:
             continue
-        print(f"[{count+1}] Crawling: {url}")
+        print(f"[{count+1}] 🧭 Crawling: {url}")
         soup, entry = scrape_page(url)
         visited.add(url)
         if entry:
@@ -74,10 +75,11 @@ def crawl(start_url, max_pages=200):
             count += 1
             time.sleep(0.5)  # Be nice to the server
 
-    print(f"Finished scraping {len(collected)} pages.")
-
+    print(f"\n✅ Finished scraping {len(collected)} pages.")
+    os.makedirs(os.path.dirname(OUTPUT_FILE), exist_ok=True)
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
         json.dump(collected, f, indent=2)
+    print(f"📄 Data saved to {OUTPUT_FILE}")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Scrape the DVT IDE User Guide")
