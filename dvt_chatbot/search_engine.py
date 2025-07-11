@@ -1,5 +1,6 @@
 import json
 import numpy as np
+import re
 from sentence_transformers import SentenceTransformer
 from typing import List, Tuple, Dict
 from dvt_chatbot.config import DVT_GUIDE_FILE
@@ -15,8 +16,6 @@ def cosine_similarity(vec1, vec2):
     return np.dot(vec1, vec2) / (np.linalg.norm(vec1) * np.linalg.norm(vec2))
 
 def clean_content(text: str) -> str:
-    import re
-
     # Collapse all whitespace
     text = re.sub(r"\s+", " ", text)
 

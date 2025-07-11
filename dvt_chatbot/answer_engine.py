@@ -5,6 +5,7 @@ from dvt_chatbot.search_engine import load_guide_chunks, find_best_semantic_matc
 
 def load_answers(filepath=None):
     path = filepath or CUSTOM_ANSWERS_FILE
+    print(f"[DEBUG] Loading answers from: {path}")
     with open(path, "r", encoding="utf-8") as f:
         return yaml.safe_load(f)
 
